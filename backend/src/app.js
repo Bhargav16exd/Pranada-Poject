@@ -19,4 +19,22 @@ app.get("/",(req,res)=>{
     res.json("SUCCESS")
 })
 
+
+
+
+// Error Handler 
+
+app.use((err,req,res)=>{
+    const statusCode = err.statusCode || 500
+    const message = err.message || "Something Went Wrong"
+    const error = err.errors || []
+
+    res.status(statusCode).json({
+        success:false,
+        message,
+        error,
+        data:null
+    })
+})
+
 export default app;
