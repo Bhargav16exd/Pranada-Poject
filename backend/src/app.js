@@ -1,6 +1,7 @@
 import express, { urlencoded } from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import userRoutes from "./routes/user.router.js"
 
 const app = express();
 
@@ -20,11 +21,11 @@ app.get("/",(req,res)=>{
 })
 
 
-
+app.use("/api/v1/user", userRoutes)
 
 // Error Handler 
 
-app.use((err,req,res)=>{
+app.use((err,req,res,next)=>{
     const statusCode = err.statusCode || 500
     const message = err.message || "Something Went Wrong"
     const error = err.errors || []
@@ -35,6 +36,7 @@ app.use((err,req,res)=>{
         error,
         data:null
     })
+    next()
 })
 
 export default app;
