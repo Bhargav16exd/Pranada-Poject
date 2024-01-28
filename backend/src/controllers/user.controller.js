@@ -3,6 +3,20 @@ import {ApiError} from "../utills/ApiError.js"
 import {ApiResponse} from "../utills/ApiResponse.js"
 import { User } from "../models/User.model.js"
 
+async function generateAccessToken(userId){
+    try {
+
+        const user = await User.findById(userId) 
+        const accessToken = await user.createAccessToken()
+        return accessToken;
+        
+    } catch (error) {
+        console.log(error)
+        throw new ApiError(500 , "Internal server Error")
+    }
+}
+
+// User Creation API Controller
 
 const signUp = asyncHandler(async(req,res)=>{
 
@@ -32,8 +46,48 @@ const signUp = asyncHandler(async(req,res)=>{
     )
 })
 
+// User Login API controller
+
+const login = asyncHandler(async(req,res)=>{
+
+    const {userName , password} = req.body 
+
+    if(!userName || !password){
+        throw new ApiError(400 , "All fields are required")
+    }
+    
+    const findExistingUser = await User.findOne({userName}).select("password")
+
+    if(!findExistingUser){
+        throw new ApiError(400,"No Such User exist")
+    }
+
+    const result = await findExistingUser.comparePassword(password)
+
+    if(!result){
+        throw new ApiError(400 , "Wrong Password Entered")
+    }
+
+    const accessToken = await generateAccessToken(findExistingUser._id)
+    const user = await User.findById(findExistingUser._id)
+
+    console.log(accessToken)
+
+    const COOKIE_OPTIONS = {
+        httpOnly:true,
+        secure:true
+    }
+
+    return res
+    .cookie("ACCESS_TOKEN",accessToken,COOKIE_OPTIONS)
+    .json(
+        new ApiResponse(200 ,"User Login Success" , {user , accessToken})
+    )
+})
+
 
 
 export {
-    signUp
+    signUp,
+    login
 }
