@@ -27,6 +27,19 @@ const authMiddleware = asyncHandler(async(req,res,next)=>{
 
 })
 
+const isAdmin = asyncHandler(async(req,res,next)=>{
+ 
+    if(req?.user.role == "ADMIN"){
+        next()
+    }
+    else
+    {
+        throw new ApiError(400,"Not Authorized")
+    }
+
+})
+
 export {
-    authMiddleware
+    authMiddleware,
+    isAdmin
 }

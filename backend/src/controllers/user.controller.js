@@ -96,10 +96,72 @@ const profile = asyncHandler(async(req,res)=>{
     )
 })
 
+// ADMIN based user password change
+
+const changePassword =  asyncHandler(async(req,res)=>{
+
+    // Check Whether user is ADMIN 
+    // Get userName and new Password of account he want to change password
+    // check for user associated with that userName
+    // get the User
+    // set new password 
+
+    const {userName , newPassword} = req.body
+
+    if(!userName || !newPassword){
+        throw new ApiError(400,"All Fields are required")
+    }
+
+    const user = await User.findOne({userName}).select("+password")
+
+    if(!user){
+        throw new ApiError(400 , "No Such User Exists")
+    }
+
+    user.password = newPassword 
+    await user.save()
+    
+   return res
+   .status(200)
+   .json(
+      new ApiResponse(200 , "Password Changed Successfully")
+   )
+    
+})
+
+// ADMIN based user role change
+
+const changeRole = asyncHandler(async(req,res)=>{
+
+    const {userName , newRole} = req.body
+
+    if(!userName || !role){
+        throw new ApiError(400,"All fields are required")
+    }
+
+    const user = await User.findOneAndUpdate({userName} , {
+        role : newRole
+    }, {new:true})
+
+    if(!user){
+        throw new ApiError(400 , "No User Exist with UserName")
+    }
+
+    await user.save()
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200 , "User Role Change Success" , user)
+    )
+})
+
 
 
 export {
     signUp,
     login,
-    profile
+    profile,
+    changePassword,
+    changeRole
 }
