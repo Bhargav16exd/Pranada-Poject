@@ -89,6 +89,8 @@ const profile = asyncHandler(async(req,res)=>{
 
     const user = await User.findById(req.user?._id)
 
+    console.log(req.user)
+
     return res
     .status(200)
     .json(
@@ -135,13 +137,14 @@ const changeRole = asyncHandler(async(req,res)=>{
 
     const {userName , newRole} = req.body
 
-    if(!userName || !role){
+    if(!userName || !newRole){
         throw new ApiError(400,"All fields are required")
     }
 
-    const user = await User.findOneAndUpdate({userName} , {
-        role : newRole
+    const user = await User.findOneAndUpdate({userName},{
+        role:newRole
     }, {new:true})
+    
 
     if(!user){
         throw new ApiError(400 , "No User Exist with UserName")

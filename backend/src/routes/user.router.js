@@ -11,7 +11,7 @@ router.route("/create-user").post(signUp)
 router.route("/login-user").post(login)
 
 // Loggedin Routes
-router.route("/get-user").post(profile)
+router.route("/get-user").get(authMiddleware,profile)
 
 //ADMIN Routes
 
