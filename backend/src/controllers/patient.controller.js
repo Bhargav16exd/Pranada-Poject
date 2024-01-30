@@ -67,8 +67,37 @@ const patientProfile = asyncHandler(async(req,res)=>{
     )
 })
 
+
+const updateProfile = asyncHandler(async(req,res)=>{
+
+    const {id} = req.params
+    const {name , age , contact , address ,occupation } = req.body
+
+    if(!id){
+        throw new ApiError(400,"Invalid Request")
+    }
+
+    const patient = await Patient.findByIdAndUpdate(id,{
+        name:name,
+        Age:age,
+        address:address,
+        Occupation:occupation,
+        contact:contact
+    },
+    { new:true })
+
+    await patient.save()
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,"Patient Profile Updated Successfully",patient)
+    )
+})
+
 export {
     patientProfile,
     createPatientProfile,
-    deletePatientProfile
+    deletePatientProfile,
+    updateProfile
 }
