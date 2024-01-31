@@ -9,17 +9,17 @@ const createPatientProfile = asyncHandler(async(req,res)=>{
 
     const {name , age , contact , address ,occupation , RegistrationDate , gender} = req.body
 
-    if(!name || !RegistrationDate){
-        throw new ApiError(400,"Name and Registration Date is required")
+    if(!name || !RegistrationDate || !gender){
+        throw new ApiError(400,"ALL FIELDS ARE required")
     }
 
     const patient = await Patient.create({
         name:name,
-        Age:age || "",
+        Age:age || "NOT SPECIFIED",
         address:address || "",
         RegistrationDate:RegistrationDate,
         Contact:contact || "",
-        gender:gender || "",
+        Gender:gender,
         Occupation:occupation || ""
     })
 
@@ -60,6 +60,10 @@ const patientProfile = asyncHandler(async(req,res)=>{
 
     const patient = await Patient.findById(id)
 
+    if(!patient){
+        throw new ApiError(400,"No Patient Exist")
+    }
+
     return res
     .status(200)
     .json(
@@ -71,7 +75,7 @@ const patientProfile = asyncHandler(async(req,res)=>{
 const updateProfile = asyncHandler(async(req,res)=>{
 
     const {id} = req.params
-    const {name , age , contact , address ,occupation } = req.body
+    const {name , age , contact , address ,occupation , gender} = req.body
 
     if(!id){
         throw new ApiError(400,"Invalid Request")
@@ -82,7 +86,8 @@ const updateProfile = asyncHandler(async(req,res)=>{
         Age:age,
         address:address,
         Occupation:occupation,
-        contact:contact
+        contact:contact,
+        Gender:gender
     },
     { new:true })
 

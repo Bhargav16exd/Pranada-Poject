@@ -17,7 +17,8 @@ const patientSchema = new mongoose.Schema({
     },
     Gender:{
         type:String,
-        enum:["MALE","FEMALE","NONBINARY"]
+        enum:["MALE","FEMALE","NONBINARY"],
+        required:true
     },
     RegistrationDate:{
         type:Date,

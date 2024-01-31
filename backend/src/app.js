@@ -2,6 +2,7 @@ import express, { urlencoded } from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import userRoutes from "./routes/user.router.js"
+import patientRoutes from "./routes/patient.router.js"
 
 const app = express();
 
@@ -21,7 +22,11 @@ app.get("/",(req,res)=>{
 })
 
 
+// Routes
+
 app.use("/api/v1/user", userRoutes)
+app.use("/api/v1/patient", patientRoutes)
+
 
 // Error Handler 
 
@@ -36,6 +41,7 @@ app.use((err,req,res,next)=>{
         error,
         data:null
     })
+
     next()
 })
 
