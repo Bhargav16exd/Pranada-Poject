@@ -7,9 +7,9 @@ import asyncHandler from "../utills/AsyncHandler.js";
 
 const createPatientProfile = asyncHandler(async(req,res)=>{
 
-    const {name , age , contact , address ,occupation , RegistrationDate , gender} = req.body
+    const {name , age , contact , address ,occupation , gender} = req.body
 
-    if(!name || !RegistrationDate || !gender){
+    if(!name || !gender){
         throw new ApiError(400,"ALL FIELDS ARE required")
     }
 
@@ -17,7 +17,6 @@ const createPatientProfile = asyncHandler(async(req,res)=>{
         name:name,
         Age:age || "NOT SPECIFIED",
         address:address || "",
-        RegistrationDate:RegistrationDate,
         Contact:contact || "",
         Gender:gender,
         Occupation:occupation || ""
@@ -100,9 +99,33 @@ const updateProfile = asyncHandler(async(req,res)=>{
     )
 })
 
+const getTodayPatients = asyncHandler(async(req,res)=>{
+
+    const today = new Date()
+    today.setHours(0,0,0,0)
+
+    const tommorow = new Date(today)
+    tommorow.setDate(tommorow.getDate() + 1 )
+
+    const patient = await Patient.find({
+        createdAt:{
+           $gte : today,
+           $lt : tommorow
+        }
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(400,"Patient Data Fetched Sucess", patient)
+    )
+    
+})
+
 export {
     patientProfile,
     createPatientProfile,
     deletePatientProfile,
-    updateProfile
+    updateProfile,
+    getTodayPatients
 }
