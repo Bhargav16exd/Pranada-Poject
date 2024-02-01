@@ -122,10 +122,30 @@ const getTodayPatients = asyncHandler(async(req,res)=>{
     
 })
 
+const searchPatient =  asyncHandler(async(req,res)=>{
+
+    const {name} = req.params;
+
+    if(!name){
+        throw new ApiError(400,"Kindly Provide Name")
+    }
+
+    const patient = await Patient.find({
+      name:{$regex : new RegExp(name,'igmu')}
+    })
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200,"Search Patient Success",patient)
+    )
+})
+
 export {
     patientProfile,
     createPatientProfile,
     deletePatientProfile,
     updateProfile,
-    getTodayPatients
+    getTodayPatients,
+    searchPatient
 }

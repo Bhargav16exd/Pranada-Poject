@@ -25,7 +25,8 @@ const patientSchema = new mongoose.Schema({
     },
     Casepaper:{
         type:mongoose.Types.ObjectId,
-        ref:"CASEPAPER"
+        ref:"CASEPAPER",
+        select:false
     }
 
 },{timestamps:true})

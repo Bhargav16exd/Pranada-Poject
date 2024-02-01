@@ -1,5 +1,5 @@
 import {Router} from "express"
-import { createPatientProfile, deletePatientProfile, getTodayPatients, patientProfile, updateProfile } from "../controllers/patient.controller.js"
+import { createPatientProfile, deletePatientProfile, getTodayPatients, patientProfile, searchPatient, updateProfile } from "../controllers/patient.controller.js"
 import { authMiddleware } from "../middlewares/auth.middleware.js"
 
 const router = Router()
@@ -11,6 +11,7 @@ router.route("/update-patient/:id").patch(authMiddleware,updateProfile)
 router.route("/delete-patient/:id").delete(authMiddleware,deletePatientProfile)
 router.route("/get-patient/:id").get(authMiddleware,patientProfile)
 router.route("/get-todays-patient/").get(authMiddleware,getTodayPatients)
+router.route("/search/:name").post(authMiddleware,searchPatient)
 
 
 export default router
