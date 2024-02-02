@@ -7,7 +7,7 @@ import asyncHandler from "../utills/AsyncHandler.js";
 
 const createPatientProfile = asyncHandler(async(req,res)=>{
 
-    const {name , age , contact , address ,occupation , gender} = req.body
+    const {name , age , contact , address ,occupation , gender , followUpDate} = req.body
 
     if(!name || !gender){
         throw new ApiError(400,"ALL FIELDS ARE required")
@@ -19,7 +19,8 @@ const createPatientProfile = asyncHandler(async(req,res)=>{
         address:address || "",
         Contact:contact || "",
         Gender:gender,
-        Occupation:occupation || ""
+        Occupation:occupation || "",
+        FollowUpDate:followUpDate || ""
     })
 
     await patient.save()
@@ -74,7 +75,7 @@ const patientProfile = asyncHandler(async(req,res)=>{
 const updateProfile = asyncHandler(async(req,res)=>{
 
     const {id} = req.params
-    const {name , age , contact , address ,occupation , gender} = req.body
+    const {name , age , contact , address ,occupation , gender , followUpDate} = req.body
 
     if(!id){
         throw new ApiError(400,"Invalid Request")
@@ -86,7 +87,8 @@ const updateProfile = asyncHandler(async(req,res)=>{
         address:address,
         Occupation:occupation,
         contact:contact,
-        Gender:gender
+        Gender:gender,
+        FollowUpDate:followUpDate
     },
     { new:true })
 
@@ -141,11 +143,33 @@ const searchPatient =  asyncHandler(async(req,res)=>{
     )
 })
 
+
+const getTodaysFollowUpPatients = asyncHandler(async(req,res)=>{
+
+   const date = new Date().toISOString().split('T')[0]
+
+    const patients = await Patient.find({
+        FollowUpDate : date
+    })
+
+    let msg 
+
+    patients.length > 0 ? msg = "Success"  :  msg = "No Follow Up Patient Today"
+
+    return res
+    .status(200)
+    .json(
+        new ApiResponse(200, msg, patients)
+    )
+
+})
+
 export {
     patientProfile,
     createPatientProfile,
     deletePatientProfile,
     updateProfile,
     getTodayPatients,
-    searchPatient
+    searchPatient,
+    getTodaysFollowUpPatients
 }

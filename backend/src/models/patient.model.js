@@ -28,6 +28,9 @@ const patientSchema = new mongoose.Schema({
         ref:"CASEPAPER",
         select:false,
         unique:true
+    },
+    FollowUpDate:{
+        type:Date
     }
 
 },{timestamps:true})

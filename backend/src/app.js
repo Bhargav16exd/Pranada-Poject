@@ -3,6 +3,7 @@ import cors from "cors"
 import cookieParser from "cookie-parser"
 import userRoutes from "./routes/user.router.js"
 import patientRoutes from "./routes/patient.router.js"
+import bodyParser from "body-parser"
 
 const app = express();
 
@@ -20,6 +21,7 @@ app.use(express.json({
 app.get("/",(req,res)=>{
     res.json("SUCCESS")
 })
+app.use(bodyParser.json())
 
 
 // Routes
